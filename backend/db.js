@@ -1,18 +1,15 @@
-const { MongoClient } = require('mongodb');
+const mongoose = require('mongoose');
+require('dotenv').config();
 
-let dbConnection;
-let uri = 'mongodb+srv://new-user1234:user1234@cluster0.cqjlfzy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
-module.exports = {
-    connectToDb: (cb) => {
-        MongoClient.connect(uri)
-            .then((client) => {
-                dbConnection = client.db();
-                return cb();
-            })
-            .catch(err => {
-                console.log(err);
-                return cb(err);
-            });
-    },
-    getDb: () => dbConnection
+
+const connectDB = async () => {
+  try {
+    await mongoose.connect('mongodb+srv://new-user1234:user1234@cluster0.cqjlfzy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0');
+    console.log('Connected to MongoDB');
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error.message);
+  }
 };
+
+module.exports = connectDB;
+
