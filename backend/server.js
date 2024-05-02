@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-// const bodyParser = require("body-parser"); - Not required
+const bodyParser = require("body-parser");
 require('dotenv').config();
 const connectDB = require('./db');
 const app = express();

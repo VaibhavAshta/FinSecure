@@ -6,7 +6,7 @@ const UserInfo = require('../models/UserInfo');
 const User = require('../models/User');
 
 
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', async (req, res) => {
     const dataList = req.body.List;
     const userId = await User.findOne({ email: req.user.email });
     const userInfo = await UserInfo.findById({ _id: userId._id });
@@ -25,7 +25,7 @@ router.post('/', authenticateToken, async (req, res) => {
     }
 });
 
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', async (req, res) => {
     const userInfo = await UserInfo.findById({ _id: req.user._id })
     const transactions = await Transaction.find({ _id: { $in: userInfo.transaction } }).populate('category').sort('-date')
     try {
