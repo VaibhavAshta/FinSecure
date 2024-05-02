@@ -51,20 +51,15 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.get('/profile', authenticateToken, async (req, res) => {
+router.get('/profile', async (req, res) => {
     // console.log(req.user);
     try {
         // Find user by email in MongoDB
-        const user = await User.findById(req.user._id);
+        const user = await User.findOne({ email: req.user.email });
         if (!user) {
             return res.status(404).json({ error: 'User not found.' });
         }
         const userInfo = await UserInfo.findById(req.user._id);
-        // populate each category details
-        for (let i=0; i<userInfo.category.length; i++){
-            const category = await Category.findById(userInfo.category[i].details);
-            userInfo.category[i].details = category;
-        }
         res.json({ user, userInfo });
     } catch (error) {
         // console.error(error);
