@@ -15,7 +15,6 @@ FinSecure is a budget tracker for personal finance and budget planning.
 - [File Structure](#file-structure)
 - [Color Reference](#color-reference)
 - [Author](#author)
-- [License](#license)
 
 ## Screenshots
 ![image](https://github.com/VaibhavAshta/VaibhavAshta/assets/88577836/542030e9-9650-48f3-b531-70ade28e7b87)
