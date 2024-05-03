@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
     StyleSheet,
     View,
@@ -14,22 +14,25 @@ import { getIncomes, deleteTransaction } from '../../dbHelpers/transactionHelper
 
 import QuickActions from '../../utils/quickActions';
 import TransactionCard from '../../components/Cards/TransactionCard';
+import AuthContext from '../../context/AuthContext';
 
 const Income = ({navigation, route}) => {
     const focused = useIsFocused();
+    const {state} = useContext(AuthContext);
 
     const [currency, setCurrency] = useState({});
     const [incomes, setIncomes] = useState([]);
     
+    
     useEffect(() => {
         getCurrency(setCurrency);
-        getIncomes(setIncomes);
+        getIncomes(setIncomes, state.user.email);
     }, [focused]);
 
     // Delete Item
     const __delete = (id) => {
         deleteTransaction(id);
-        getIncomes(setIncomes);
+        getIncomes(setIncomes, state.user.email);
     }
 
     // Update Item

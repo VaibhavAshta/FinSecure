@@ -11,24 +11,75 @@ import Icon from 'react-native-vector-icons/Feather';
 
 import { Colors, Typography } from '../../styles';
 import AuthContext from '../../context/AuthContext';
+import { useNavigation } from '@react-navigation/native';
 
 import Button from '../../components/Button';
+import axios from 'axios';
+import { backendUrl } from '../../dbHelpers/transactionHelper';
 
 const Login = ({navigation}) => {
-    const {authContext} = React.useContext(AuthContext);
+    const navigation = useNavigation();
 
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [isLogin, setIsLogin] = useState(false);
+
+    const __register = async () => {
+        if (username !== '' && email !== '' && password!=='') {
+            const options = {
+                method: 'POST',
+                url: `${backendUrl}/auth/register/`,
+                data: {
+                    username,
+                    email,
+                    password
+                }
+            }
+
+            try {
+                const response = await axios.request(options);
+                if (response.status===200) {
+                    __login();
+                }
+            } catch (error) {
+                setPassword('');
+                setEmail('');
+            }
+        }
+        else {
+            Alert.alert('Sorry !', 'Please, enter valid informations.');
+        }
+    }
 
     // Login
-    const __login = () => {
-        if (firstName != '' && lastName != '') {
-            const user = {
-                firstName: firstName,
-                lastName: lastName,
-                joined: new Date()
+    const __login = async () => {
+        if (email !== '' && password!=='') {
+            const options = {
+                method: 'POST',
+                url: `${backendUrl}/auth/login/`,
+                data: {
+                    email,
+                    password
+                }
             }
-            authContext.signIn(user);
+
+            try {
+                const response = await axios.request(options);
+                if (response.status===200) {
+                    const res = await axios.request(`${backendUrl}/auth/profile/`);
+                    const data = await res.json();
+                    const { user, userInfo } = data.data;
+                    const userDetails = {
+                        user,
+                        userInfo
+                    }
+                    authContext.signIn(userDetails);
+                }
+            } catch (error) {
+                setPassword('');
+                setEmail('');
+            }
         }
         else {
             Alert.alert('Sorry !', 'Please, enter valid informations.');
@@ -48,26 +99,37 @@ const Login = ({navigation}) => {
                     <Text style={[Typography.H1, {marginLeft: 10, color: Colors.WHITE}]}>Login</Text>
                 </View>
 
-                {/* Firstname */}
-                <View style={{marginTop: 20}}>
-                    <Text style={[Typography.TAGLINE, {color: Colors.GRAY_DARK}]}>Firstname</Text>
+                {/* Username */}
+                {!isLogin && <View style={{marginTop: 20}}>
+                    <Text style={[Typography.TAGLINE, {color: Colors.GRAY_DARK}]}>Username</Text>
                     <TextInput
-                        value={firstName}
-                        placeholder='Exp: John'
+                        value={username}
+                        placeholder='John Doe'
                         keyboardType='name-phone-pad'
-                        onChangeText={(text) => setFirstName(text)}
+                        onChangeText={(text) => setUsername(text)}
+                        style={[styles.input, Typography.BODY]}
+                        placeholderTextColor={Colors.GRAY_MEDIUM} />
+                </View>}
+
+                {/* Lastname */}
+                <View style={{marginTop: 20}}>
+                    <Text style={[Typography.TAGLINE, {color: Colors.GRAY_DARK}]}>Email</Text>
+                    <TextInput
+                        value={email}
+                        placeholder='johndoe@email.com'
+                        keyboardType='name-phone-pad'
+                        onChangeText={(text) => setEmail(text)}
                         style={[styles.input, Typography.BODY]}
                         placeholderTextColor={Colors.GRAY_MEDIUM} />
                 </View>
 
-                {/* Lastname */}
                 <View style={{marginTop: 20}}>
-                    <Text style={[Typography.TAGLINE, {color: Colors.GRAY_DARK}]}>Lastname</Text>
+                    <Text style={[Typography.TAGLINE, {color: Colors.GRAY_DARK}]}>Password</Text>
                     <TextInput
-                        value={lastName}
-                        placeholder='Exp: Doe'
-                        keyboardType='name-phone-pad'
-                        onChangeText={(text) => setLastName(text)}
+                        value={password}
+                        placeholder='********'
+                        textContentType='password'
+                        onChangeText={(text) => setPassword(text)}
                         style={[styles.input, Typography.BODY]}
                         placeholderTextColor={Colors.GRAY_MEDIUM} />
                 </View>
@@ -76,8 +138,17 @@ const Login = ({navigation}) => {
             {/* Footer */}
             <View style={styles.footerContainer}>
                 <Button 
-                    title='Login'
-                    onPress={() => __login()} />
+                    title={isLogin? 'Login' : 'Register'}
+                    onPress={() => isLogin? __login() : __register()} />
+            </View>
+
+            <View style={{ alignItems: 'center', marginTop: 20 }}>
+                <TouchableOpacity onPress={() => setIsLogin(prev => !prev)}>
+                    <Text style={{ textAlign: 'center', textDecorationStyle: 'underline'}}>
+                        {isLogin? 'New to FinSecure? Register' : 'Already had an account? Login'}
+                    </Text>
+                </TouchableOpacity>
+
             </View>
         </View>
     );

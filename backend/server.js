@@ -6,6 +6,7 @@ const connectDB = require('./db');
 const app = express();
 const port = process.env.PORT || 3000;
 const auth = require('./routes/auth');
+const transaction = require('./routes/transaction');
 
 
 connectDB();
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use('/auth', auth);
+app.use('/transactions', transaction)
 
 
 

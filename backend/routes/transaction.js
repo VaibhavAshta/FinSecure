@@ -25,8 +25,9 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.get('/', async (req, res) => {
-    const userInfo = await UserInfo.findById({ _id: req.user._id })
+router.get('/:email', async (req, res) => {
+    const user = await User.findOne({ email: req.params.email });
+    const userInfo = await UserInfo.find({ _id: user._id });
     const transactions = await Transaction.find({ _id: { $in: userInfo.transaction } }).populate('category').sort('-date')
     try {
         res.json(transactions);

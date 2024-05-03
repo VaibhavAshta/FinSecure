@@ -72,74 +72,41 @@ export const getTransactions = (setTransactions) => {
     });
 }
 
+export const backendUrl = 'https://finsecure.onrender.com' 
 // Get Incomes
-export const getIncomes = (setIncomes) => {
-    db.transaction((tx) => {
-        tx.executeSql(
-            'SELECT * FROM ' + tableName + ' WHERE type = ?',
-            ['income'],
-            (tx, results) => {
-                var len = results.rows.length;
-                let result = [];
+export const getIncomes = async (setIncomes, email) => {
+    const options = {
+        method: 'GET',
+        url: `${backendUrl}/transaction/${email}`,
+    }
 
-                if (len > 0) {
-                    for (let i = 0; i < len; i++) {
-                        let row = results.rows.item(i);
-                        result.push({
-                            id: row.id,
-                            category: row.category,
-                            icon: row.icon,
-                            transaction_date: row.transaction_date,
-                            amount: row.amount,
-                            type: row.type
-                        })
-                    }
-                }
-                else {
-                    console.log('empty');
-                }
-                setIncomes(result);
-            },
-            error => {
-                console.log(error);
-            }
-        );
-    });
+    try {
+        const response = await axios.request(options);
+        if (response.status===200) {
+            const data = await response.json();
+            setIncomes(data.filter(t => t.transaction_type==='Income'));
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 // Get Expenses
-export const getExpenses = (setExpenses) => {
-    db.transaction((tx) => {
-        tx.executeSql(
-            'SELECT * FROM ' + tableName + ' WHERE type = ?',
-            ['expense'],
-            (tx, results) => {
-                var len = results.rows.length;
-                let result = [];
+export const getExpenses = async (setExpenses, email) => {
+    const options = {
+        method: 'GET',
+        url: `${backendUrl}/transaction/${email}`,
+    }
 
-                if (len > 0) {
-                    for (let i = 0; i < len; i++) {
-                        let row = results.rows.item(i);
-                        result.push({
-                            id: row.id,
-                            category: row.category,
-                            icon: row.icon,
-                            transaction_date: row.transaction_date,
-                            amount: row.amount,
-                            type: row.type
-                        })
-                    }
-                }
-                else {
-                    console.log('empty');
-                }
-                setExpenses(result);
-            },
-            error => {
-                console.log(error);
-            }
-        );
-    });
+    try {
+        const response = await axios.request(options);
+        if (response.status===200) {
+            const data = await response.json();
+            setExpenses(data.filter(t => t.transaction_type==='Expense'));
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 // GetTotal Incomes
