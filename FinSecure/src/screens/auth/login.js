@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
     StyleSheet,
     Alert,
@@ -18,7 +18,8 @@ import axios from 'axios';
 import { backendUrl } from '../../dbHelpers/transactionHelper';
 
 const Login = ({navigation}) => {
-    const navigation = useNavigation();
+
+    const {authContext} = useContext(AuthContext);
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -26,6 +27,7 @@ const Login = ({navigation}) => {
     const [isLogin, setIsLogin] = useState(false);
 
     const __register = async () => {
+        console.log('register')
         if (username !== '' && email !== '' && password!=='') {
             const options = {
                 method: 'POST',
@@ -39,6 +41,7 @@ const Login = ({navigation}) => {
 
             try {
                 const response = await axios.request(options);
+                console.log(response)
                 if (response.status===200) {
                     __login();
                 }
@@ -54,6 +57,7 @@ const Login = ({navigation}) => {
 
     // Login
     const __login = async () => {
+        console.log('hiii')
         if (email !== '' && password!=='') {
             const options = {
                 method: 'POST',
@@ -66,6 +70,7 @@ const Login = ({navigation}) => {
 
             try {
                 const response = await axios.request(options);
+                console.log('hello')
                 if (response.status===200) {
                     const res = await axios.request(`${backendUrl}/auth/profile/`);
                     const data = await res.json();
@@ -74,6 +79,7 @@ const Login = ({navigation}) => {
                         user,
                         userInfo
                     }
+                    console.log('hua')
                     authContext.signIn(userDetails);
                 }
             } catch (error) {
@@ -129,10 +135,19 @@ const Login = ({navigation}) => {
                         value={password}
                         placeholder='********'
                         textContentType='password'
+                        secureTextEntry
                         onChangeText={(text) => setPassword(text)}
                         style={[styles.input, Typography.BODY]}
                         placeholderTextColor={Colors.GRAY_MEDIUM} />
                 </View>
+            </View>
+
+            <View style={{ alignItems: 'center', marginTop: 20 }}>
+                <TouchableOpacity onPress={() => setIsLogin(prev => !prev)}>
+                    <Text style={{ color:'white', textAlign: 'center', textDecorationLine: 'underline'}}>
+                        {isLogin? 'New to FinSecure? Register' : 'Already had an account? Login'}
+                    </Text>
+                </TouchableOpacity>
             </View>
 
             {/* Footer */}
@@ -142,14 +157,6 @@ const Login = ({navigation}) => {
                     onPress={() => isLogin? __login() : __register()} />
             </View>
 
-            <View style={{ alignItems: 'center', marginTop: 20 }}>
-                <TouchableOpacity onPress={() => setIsLogin(prev => !prev)}>
-                    <Text style={{ textAlign: 'center', textDecorationStyle: 'underline'}}>
-                        {isLogin? 'New to FinSecure? Register' : 'Already had an account? Login'}
-                    </Text>
-                </TouchableOpacity>
-
-            </View>
         </View>
     );
 };
