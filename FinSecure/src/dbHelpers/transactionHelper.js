@@ -194,19 +194,13 @@ export const updateTransaction = async (item) => {
 }
 
 // Delete Transaction
-export const deleteTransaction = (id) => {
-    db.transaction((tx) => {
-        tx.executeSql(
-            'DELETE FROM ' + tableName + ' WHERE id = ?',
-            [id],
-            () => {
-                console.log('deleted');
-            },
-            error => {
-                console.log(error);
-            }
-        );
-    });
+export const deleteTransaction = async (id) => {
+  
+        try {
+            const response = await axios.delete(`${backendUrl}/transactions/${id}`);
+        } catch (error) {
+            console.log(error);
+        }
 }
 
 // Drop Table
