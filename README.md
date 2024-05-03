@@ -15,10 +15,9 @@ FinSecure is a budget tracker for personal finance and budget planning.
 - [File Structure](#file-structure)
 - [Color Reference](#color-reference)
 - [Author](#author)
-- [License](#license)
 
 ## Screenshots
-
+![image](https://github.com/VaibhavAshta/VaibhavAshta/assets/88577836/542030e9-9650-48f3-b531-70ade28e7b87)
 
 ## Tech Stack
 
@@ -31,13 +30,13 @@ FinSecure is a budget tracker for personal finance and budget planning.
 
 Clone the repo
 ```bash
-  git clone https://github.com/blaiti/waletty
+  git clone https://github.com/vaibhavashta/FinSecure
 ```
 
 Install Waletty with npm
 
 ```bash
-  cd Waletty
+  cd FinSecure
   npm install
 ```
     
@@ -174,8 +173,3 @@ FinSecure
 
 - [@vaibhavashta](https://github.com/vaibhavashta)
 - [@Aditya266](https://github.com/Adityas266)
-
-
-## License
-
-[MIT](https://github.com/blaiti/FinSecure/blob/main/LICENSE)
