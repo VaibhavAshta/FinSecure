@@ -71,20 +71,16 @@ const Settings = ({ navigation }) => {
                             {/* Username */}
                             <View style={styles.rowContainer}>
                                 <Text style={[Typography.BODY, { color: Colors.WHITE }]}>Username</Text>
-                                <Text style={[Typography.TAGLINE, { color: Colors.GRAY_MEDIUM }]}>{user.username}</Text>
+                                <Text style={[Typography.TAGLINE, { color: Colors.GRAY_MEDIUM }]}>{state.user.user.username}</Text>
                             </View>
                             <Bar padding={0.3} color={Colors.GRAY_THIN} />
                             {/* Email */}
                             <View style={styles.rowContainer}>
                                 <Text style={[Typography.BODY, { color: Colors.WHITE }]}>Email</Text>
-                                <Text style={[Typography.TAGLINE, { color: Colors.GRAY_MEDIUM }]}>{user.email}</Text>
+                                <Text style={[Typography.TAGLINE, { color: Colors.GRAY_MEDIUM }]}>{state.user.user.email}</Text>
                             </View>
                             <Bar padding={0.3} color={Colors.GRAY_THIN} />
                             {/* Joined at */}
-                            <View style={styles.rowContainer}>
-                                <Text style={[Typography.BODY, { color: Colors.WHITE }]}>Joined</Text>
-                                <Text style={[Typography.TAGLINE, { color: Colors.GRAY_MEDIUM }]}>{date.toDateString()}</Text>
-                            </View>
                         </View>
                     </View>
 
