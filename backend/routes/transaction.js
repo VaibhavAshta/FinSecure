@@ -24,7 +24,7 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     try {
-        await Transaction.deleteOne(req.params.id);
+        await Transaction.deleteOne({ _id: req.params.id});
         res.status(201).send('success');
     } catch (error) {
         console.error(error);
