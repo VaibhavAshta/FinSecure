@@ -43,7 +43,7 @@ const Expense = ({navigation}) => {
         <View style={styles.container}>
             {expenses.length == 0 ?
                 <View style={styles.emptyContainer}>
-                    <Text style={[Typography.H3, {color: Colors.WHITE, textAlign: 'center'}]}>You haven't any expense !</Text>
+                    <Text style={[Typography.H3, {color: Colors.WHITE, textAlign: 'center'}]}>No expense added!</Text>
                 </View>
             :
                 <SwipeableFlatList

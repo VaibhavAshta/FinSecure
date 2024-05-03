@@ -79,7 +79,7 @@ const Home = ({navigation}) => {
                     ListEmptyComponent={() => {
                         return(
                             <View style={styles.emptyContainer}>
-                                <Text style={[Typography.TAGLINE, {color: Colors.WHITE, textAlign: 'center'}]}>You haven't any transactions !</Text>
+                                <Text style={[Typography.TAGLINE, {color: Colors.WHITE, textAlign: 'center'}]}>No transactions added!</Text>
                             </View>
                         )
                     }}

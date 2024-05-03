@@ -44,7 +44,7 @@ const Income = ({navigation, route}) => {
         <View style={styles.container}>
             {incomes.length == 0 ?
                 <View style={styles.emptyContainer}>
-                    <Text style={[Typography.H3, {color: Colors.WHITE, textAlign: 'center'}]}>You haven't any income !</Text>
+                    <Text style={[Typography.H3, {color: Colors.WHITE, textAlign: 'center'}]}>No income added!</Text>
                 </View>
             :
                 <SwipeableFlatList
