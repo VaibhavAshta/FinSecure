@@ -7,16 +7,24 @@ const User = require('../models/User');
 
 
 router.post('/', async (req, res) => {
-    const dataList = req.body.List;
-    const userId = await User.findOne({ email: req.user.email });
-    const userInfo = await UserInfo.findById({ _id: userId._id });
+    const data = req.body;
+    console.log(data);
+    const userId = await User.findOne({ email: data.email });
+    console.log(userId)
+    if (!userId) {
+        res.status(500).json({ error: 'User not found.' });
+        return;
+    }
+    const userInfo = await UserInfo.findOne({ userId: userId._id });
     try {
-        // reverse loop
-        for (let i = dataList.length - 1; i >= 0; i--) {
-            const data = dataList[i];
-            const transaction = await Transaction.create(data);
-            userInfo.transaction.push(transaction._id);
-        }
+        const transaction = await Transaction.create({
+            amount: data.amount,
+            acc: data.acc,
+            date: data.date,
+            category: data.category,
+            transaction_type: data.transaction_type
+        });
+        userInfo.transaction.push(transaction._id);
         await userInfo.save();
         res.status(201).json(userInfo);
     } catch (error) {
@@ -27,7 +35,7 @@ router.post('/', async (req, res) => {
 
 router.get('/:email', async (req, res) => {
     const user = await User.findOne({ email: req.params.email });
-    const userInfo = await UserInfo.find({ _id: user._id });
+    const userInfo = await UserInfo.findOne({ userId: user._id });
     const transactions = await Transaction.find({ _id: { $in: userInfo.transaction } }).populate('category').sort('-date')
     try {
         res.json(transactions);

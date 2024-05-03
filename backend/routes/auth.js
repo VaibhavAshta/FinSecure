@@ -14,6 +14,7 @@ router.post('/register', async (req, res) => {
     try {
         // check is use is alradey exist
         const user = await User.findOne({ email: data.email });
+        console.log('user', user);
         if (user) {
             return res.status(400).json({ error: 'User already exists.' });
 
@@ -21,9 +22,14 @@ router.post('/register', async (req, res) => {
             // Create new user
 
             const newUser = await User.create(data);
-            data.userInfo._id = newUser._id;
-            const newUserInfo = new UserInfo(data.userInfo);
-            await newUserInfo.save();
+            console.log('newUser', newUser);
+            const newUserInfo = await UserInfo.create({
+                profession: 'Student',
+                transaction: [],
+                category: [],
+                MoneyBox: [],
+                userId: newUser._id
+            })
 
             res.status(201).json({ message: 'User registered successfully.', userId: newUser._id.toString() });
         }
@@ -44,7 +50,7 @@ router.post('/login', async (req, res) => {
         if (!user) {
             return res.status(401).json({ error: 'Invalid credentials.' });
         }
-        res.json({ message: 'Login successful.', token });
+        res.json({ message: 'Login successful.' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error.' });
