@@ -57,15 +57,15 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.get('/profile', async (req, res) => {
+router.get('/:email', async (req, res) => {
     // console.log(req.user);
     try {
         // Find user by email in MongoDB
-        const user = await User.findOne({ email: req.user.email });
+        const user = await User.findOne({ email: req.params.email });
         if (!user) {
             return res.status(404).json({ error: 'User not found.' });
         }
-        const userInfo = await UserInfo.findById(req.user._id);
+        const userInfo = await UserInfo.findOne({ userId: user._id});
         res.json({ user, userInfo });
     } catch (error) {
         // console.error(error);

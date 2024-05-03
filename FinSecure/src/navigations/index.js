@@ -75,6 +75,7 @@ function MyTabs() {
 
 const RootNavigator = () => {
   const {state} = React.useContext(AuthContext);
+  console.log(state);
 
   return (
       <NavigationContainer>

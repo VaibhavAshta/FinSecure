@@ -57,8 +57,9 @@ const Login = ({navigation}) => {
 
     // Login
     const __login = async () => {
-        console.log('hiii')
+        console.log('hiii', email, password);
         if (email !== '' && password!=='') {
+            console.log('entered')
             const options = {
                 method: 'POST',
                 url: `${backendUrl}/auth/login/`,
@@ -71,9 +72,11 @@ const Login = ({navigation}) => {
             try {
                 const response = await axios.request(options);
                 console.log('hello')
+                console.log(response.status)
                 if (response.status===200) {
-                    const res = await axios.request(`${backendUrl}/auth/profile/`);
+                    const res = await axios.get(`${backendUrl}/auth/profile/`);
                     const data = await res.json();
+                    console.log(res)
                     const { user, userInfo } = data.data;
                     const userDetails = {
                         user,
