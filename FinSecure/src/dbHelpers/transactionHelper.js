@@ -39,38 +39,16 @@ export const createTransactionsTable = () => {
 }
 
 // Get Transactions
-export const getTransactions = (setTransactions) => {
-    db.transaction((tx) => {
-        tx.executeSql(
-            'SELECT * FROM ' + tableName,
-            [],
-            (tx, results) => {
-                var len = results.rows.length;
-                let result = [];
-
-                if (len > 0) {
-                    for (let i = 0; i < len; i++) {
-                        let row = results.rows.item(i);
-                        result.push({
-                            id: row.id,
-                            category: row.category,
-                            icon: row.icon,
-                            transaction_date: row.transaction_date,
-                            amount: row.amount,
-                            type: row.type
-                        })
-                    }
-                }
-                else {
-                    console.log('empty');
-                }
-                setTransactions(result);
-            },
-            error => {
-                console.log(error);
-            }
-        );
-    });
+export const getTransactions = async (setTransactions, email) => {
+    try {
+        const response = await axios.get(`${backendUrl}/transactions/${email}`);
+        if (response.status===200) {
+            const data = response.data;
+            setTransactions(data);
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export const backendUrl = 'https://finsecure.onrender.com' 
@@ -106,59 +84,39 @@ export const getExpenses = async (setExpenses, email) => {
 }
 
 // GetTotal Incomes
-export const getTotalIncomes = (setTotalIncomes) => {
-    db.transaction((tx) => {
-        tx.executeSql(
-            'SELECT * FROM ' + tableName + ' WHERE type = ?',
-            ['income'],
-            (tx, results) => {
-                var len = results.rows.length;
-                let total = 0;
-
-                if (len > 0) {
-                    for (let i = 0; i < len; i++) {
-                        let row = results.rows.item(i);
-                        total += row.amount;
-                    }
-                }
-                else {
-                    console.log('empty');
-                }
-                setTotalIncomes(total)
-            },
-            error => {
-                console.log(error);
+export const getTotalIncomes = async (setTotalIncomes, email) => {
+    try {
+        const response = await axios.get(`${backendUrl}/transactions/${email}`);
+        if (response.status===200) {
+            const data = response.data;
+            let amount = 0;
+            for (let i=0; i <data.length; i++) {
+                if (data[i].transaction_type==='Income')
+                    amount += data[i].amount;
             }
-        );
-    });
+            setTotalIncomes(amount);
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 // GetTotal Expenses
-export const getTotalExpenses = (setTotalExpenses) => {
-    db.transaction((tx) => {
-        tx.executeSql(
-            'SELECT * FROM ' + tableName + ' WHERE type = ?',
-            ['expense'],
-            (tx, results) => {
-                var len = results.rows.length;
-                let total = 0;
-
-                if (len > 0) {
-                    for (let i = 0; i < len; i++) {
-                        let row = results.rows.item(i);
-                        total += row.amount;
-                    }
-                }
-                else {
-                    console.log('empty');
-                }
-                setTotalExpenses(total)
-            },
-            error => {
-                console.log(error);
+export const getTotalExpenses = async (setTotalExpenses, email) => {
+    try {
+        const response = await axios.get(`${backendUrl}/transactions/${email}`);
+        if (response.status===200) {
+            const data = response.data;
+            let amount = 0;
+            for (let i=0; i <data.length; i++) {
+                if (data[i].transaction_type==='Expense')
+                    amount += data[i].amount;
             }
-        );
-    });
+            setTotalExpenses(amount);
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 // Insert Transactions
