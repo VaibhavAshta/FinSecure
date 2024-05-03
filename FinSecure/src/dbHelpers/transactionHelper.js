@@ -1,5 +1,6 @@
 import { Alert } from 'react-native';
 import db from './openDB';
+import axios from 'axios';
 
 // Table Name
 const tableName = 'transactions';
@@ -75,15 +76,10 @@ export const getTransactions = (setTransactions) => {
 export const backendUrl = 'https://finsecure.onrender.com' 
 // Get Incomes
 export const getIncomes = async (setIncomes, email) => {
-    const options = {
-        method: 'GET',
-        url: `${backendUrl}/transaction/${email}`,
-    }
-
     try {
-        const response = await axios.request(options);
+        const response = await axios.get(`${backendUrl}/transactions/${email}`);
         if (response.status===200) {
-            const data = await response.json();
+            const data = response.data;
             setIncomes(data.filter(t => t.transaction_type==='Income'));
         }
     } catch (error) {
@@ -95,13 +91,13 @@ export const getIncomes = async (setIncomes, email) => {
 export const getExpenses = async (setExpenses, email) => {
     const options = {
         method: 'GET',
-        url: `${backendUrl}/transaction/${email}`,
+        url: `${backendUrl}/transactions/${email}`,
     }
 
     try {
         const response = await axios.request(options);
         if (response.status===200) {
-            const data = await response.json();
+            const data = response.data;
             setExpenses(data.filter(t => t.transaction_type==='Expense'));
         }
     } catch (error) {
@@ -166,44 +162,34 @@ export const getTotalExpenses = (setTotalExpenses) => {
 }
 
 // Insert Transactions
-export const insertTransaction = (item) => {
+export const insertTransaction = async (item) => {
     if (item.amount == 0) {
         Alert.alert('Oups !', 'Please, write correct data.')
     }
     else {
-        db.transaction((tx) => {
-            tx.executeSql(
-                'INSERT INTO ' + tableName + '(category, icon, transaction_date, amount, type) VALUES(?,?,?,?,?);',
-                [item.category, item.icon, item.date, item.amount, item.type],
-                () => {
-                    console.log('inserted');
-                },
-                error => {
-                    console.log(error);
-                }
-            );
-        });
+        try {
+            const response = await axios.post(`${backendUrl}/transactions/`, {
+                ...item
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 
 // Update Transactions
-export const updateTransaction = (item) => {
+export const updateTransaction = async (item) => {
     if (item.amount == 0) {
         Alert.alert('Oups !', 'Please, write correct data.')
     }
     else {
-        db.transaction((tx) => {
-            tx.executeSql(
-                'UPDATE ' + tableName + ' SET category = ?, icon = ?, transaction_date = ?, amount = ?, type = ? WHERE id = ?',
-                [item.category, item.icon, item.date, item.amount, item.type, item.id],
-                () => {
-                    console.log('updated');
-                },
-                error => {
-                    console.log(error);
-                }
-            );
-        });
+        try {
+            const response = await axios.put(`${backendUrl}/transactions/${item.id}`, {
+                ...item
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 

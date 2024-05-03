@@ -25,13 +25,13 @@ const Expense = ({navigation}) => {
     
     useEffect(() => {
         getCurrency(setCurrency);
-        getExpenses(setExpenses, state.user.email);
+        getExpenses(setExpenses, state.user.user.email);
     }, [focused]);
 
     // Delete Item
     const __delete = (id) => {
         deleteTransaction(id);
-        getExpenses(setExpenses, state.user.email);
+        getExpenses(setExpenses, state.user.user.email);
     }
 
     // Update Item

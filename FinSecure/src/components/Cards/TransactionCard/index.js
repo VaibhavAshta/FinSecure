@@ -7,6 +7,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import { Colors, Typography } from '../../../styles';
+import { categoryIcon } from '../../../utils/categories';
 
 const TransactionCard = (props) => {
     const transaction = props.transaction;
@@ -15,7 +16,7 @@ const TransactionCard = (props) => {
     return (
         <View style={styles.container}>
             <View style={styles.iconContainer}>
-                <Icon name={transaction.icon} color={Colors.WHITE} size={15} />
+                <Icon name={categoryIcon[transaction.category]} color={Colors.WHITE} size={15} />
             </View>
 
             <View style={styles.detailsContainer}>
@@ -23,8 +24,8 @@ const TransactionCard = (props) => {
                 <Text style={[Typography.TAGLINE, {color: Colors.GRAY_DARK}]}>{transaction.transaction_date}</Text>
             </View>
 
-            <Text style={[Typography.H4, transaction.type == 'income' ? {color: Colors.SUCESS} : {color: Colors.ALERT}]}>
-                {transaction.type == 'income' ? '+' : '-'}{currency} {transaction.amount}
+            <Text style={[Typography.H4, transaction.transaction_type === 'Income' ? {color: Colors.SUCESS} : {color: Colors.ALERT}]}>
+                {transaction.transaction_type === 'Income' ? '+' : '-'}{currency} {transaction.amount}
             </Text>
         </View>
     );

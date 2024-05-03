@@ -5,6 +5,23 @@ const Category = require('../models/Category');
 const UserInfo = require('../models/UserInfo');
 const User = require('../models/User');
 
+router.put('/:id', async (req, res) => {
+    try {
+        const data = req.body;
+        const transaction = await Transaction.findById(req.params.id);
+        transaction.amount = data.amount;
+        transaction.acc = data.acc;
+        transaction.transaction_type = data.transaction_type;
+        transaction.category = data.category;
+        transaction.date = data.date;
+        await transaction.save();
+        res.status(201).json(transaction);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error.' });
+    }
+})
+
 
 router.post('/', async (req, res) => {
     const data = req.body;

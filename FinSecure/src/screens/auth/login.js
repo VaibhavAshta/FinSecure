@@ -27,7 +27,6 @@ const Login = ({navigation}) => {
     const [isLogin, setIsLogin] = useState(false);
 
     const __register = async () => {
-        console.log('register')
         if (username !== '' && email !== '' && password!=='') {
             const options = {
                 method: 'POST',
@@ -41,7 +40,6 @@ const Login = ({navigation}) => {
 
             try {
                 const response = await axios.request(options);
-                console.log(response)
                 if (response.status===200) {
                     __login();
                 }
@@ -57,9 +55,7 @@ const Login = ({navigation}) => {
 
     // Login
     const __login = async () => {
-        console.log('hiii', email, password);
         if (email !== '' && password!=='') {
-            console.log('entered')
             const options = {
                 method: 'POST',
                 url: `${backendUrl}/auth/login/`,
@@ -71,18 +67,14 @@ const Login = ({navigation}) => {
 
             try {
                 const response = await axios.request(options);
-                console.log('hello')
-                console.log(response.status)
                 if (response.status===200) {
-                    const res = await axios.get(`${backendUrl}/auth/profile/`);
-                    const data = await res.json();
-                    console.log(res)
-                    const { user, userInfo } = data.data;
+                    const res = await axios.get(`${backendUrl}/auth/${email}`);
+                    const data = res.data;
+                    const { user, userInfo } = data;
                     const userDetails = {
                         user,
                         userInfo
                     }
-                    console.log('hua')
                     authContext.signIn(userDetails);
                 }
             } catch (error) {

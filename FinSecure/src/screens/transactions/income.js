@@ -26,13 +26,13 @@ const Income = ({navigation, route}) => {
     
     useEffect(() => {
         getCurrency(setCurrency);
-        getIncomes(setIncomes, state.user.email);
+        getIncomes(setIncomes, state.user.user.email);
     }, [focused]);
 
     // Delete Item
     const __delete = (id) => {
         deleteTransaction(id);
-        getIncomes(setIncomes, state.user.email);
+        getIncomes(setIncomes, state.user.user.email);
     }
 
     // Update Item
