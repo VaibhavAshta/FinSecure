@@ -25,7 +25,7 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         await Transaction.deleteOne(req.params.id);
-        res.status(201).json(transaction);
+        res.status(201).send('success');
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error.' });
